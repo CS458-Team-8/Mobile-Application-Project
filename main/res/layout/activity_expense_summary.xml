@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Title for the Expense Summary -->
+    <TextView
+        android:id="@+id/summaryTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Expense Summary"
+        android:textSize="24sp"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="24dp" />
+
+    <!-- Date Range Filter -->
+    <EditText
+        android:id="@+id/filterStartDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Start Date (YYYY-MM-DD)"
+        android:inputType="date"
+        android:minHeight="48dp"
+        android:layout_marginBottom="12dp" />
+
+    <EditText
+        android:id="@+id/filterEndDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="End Date (YYYY-MM-DD)"
+        android:inputType="date"
+        android:minHeight="48dp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Button to Filter Expenses -->
+    <Button
+        android:id="@+id/filterExpensesButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filter Expenses"
+        android:minHeight="48dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Placeholder for Expense Summary Chart (e.g., PieChart, BarChart) -->
+    <FrameLayout
+        android:id="@+id/summaryChartContainer"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>
