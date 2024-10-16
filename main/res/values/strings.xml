@@ -1,0 +1,22 @@
+<resources>
+    <!-- App name -->
+    <string name="app_name">Group Project Team 8</string>
+
+    <!-- Firebase Google App ID -->
+    <string name="google_app_id">YOUR_GOOGLE_APP_ID</string> <!-- Replace with actual Firebase App ID -->
+
+    <!-- Common Strings for Activities -->
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="email_hint">Enter your email</string>
+    <string name="password_hint">Enter your password</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="add_expense_button">Add Expense</string>
+    <string name="expense_dashboard">Expense Dashboard</string>
+
+    <!-- Error/Info Messages -->
+    <string name="error_missing_fields">Please enter all details</string>
+    <string name="sign_up_success">Sign up successful</string>
+    <string name="sign_up_failed">Sign up failed: %1$s</string> <!-- Will replace %1$s with dynamic message -->
+    <string name="fetch_expenses_failed">Failed to fetch expenses.</string>
+</resources>

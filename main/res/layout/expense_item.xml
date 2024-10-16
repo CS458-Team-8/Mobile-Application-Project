@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <!-- Description of the Expense -->
+    <TextView
+        android:id="@+id/expenseDescriptionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:textSize="18sp"
+        android:minHeight="48dp"/>
+
+    <!-- Amount of the Expense -->
+    <TextView
+        android:id="@+id/expenseAmountTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Amount"
+        android:textSize="16sp"
+        android:minHeight="48dp"/>
+
+    <!-- Category of the Expense -->
+    <TextView
+        android:id="@+id/expenseCategoryTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Category"
+        android:textSize="16sp"
+        android:minHeight="48dp"/>
+
+    <!-- Date of the Expense -->
+    <TextView
+        android:id="@+id/expenseDateTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        android:textSize="16sp"
+        android:minHeight="48dp"/>
+</LinearLayout>
