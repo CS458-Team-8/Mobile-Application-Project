@@ -29,4 +29,15 @@
     <string name="equals">=</string>
     <string name="logout">Logout</string>
 
+    <string-array name="expense_categories">
+        <item>Groceries</item>
+        <item>Rent</item>
+        <item>Utilities</item>
+        <item>Transportation</item>
+        <item>Entertainment</item>
+        <item>Dining</item>
+        <item>Healthcare</item>
+        <item>Education</item>
+        <item>Others</item>
+    </string-array>
 </resources>

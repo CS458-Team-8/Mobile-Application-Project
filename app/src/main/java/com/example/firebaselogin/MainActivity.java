@@ -2,7 +2,6 @@ package com.example.firebaselogin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -14,9 +13,8 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
-    Button logoutButton;
-    Button launchCalculatorButton; // New button for launching calculator
-    TextView textview;
+    Button logoutButton, addExpenseButton, viewHistoryButton, viewSummaryButton;
+    TextView textView;
     FirebaseUser user;
 
     @Override
@@ -27,8 +25,10 @@ public class MainActivity extends AppCompatActivity {
         // Initialize FirebaseAuth
         auth = FirebaseAuth.getInstance();
         logoutButton = findViewById(R.id.logout);
-        launchCalculatorButton = findViewById(R.id.btn_launch_calculator); // Initialize calculator button
-        textview = findViewById(R.id.user_details);
+        addExpenseButton = findViewById(R.id.btn_add_expense);
+        viewHistoryButton = findViewById(R.id.btn_view_summary);
+        viewSummaryButton = findViewById(R.id.btn_view_summary);
+        textView = findViewById(R.id.user_details);
 
         // Get the current user
         user = auth.getCurrentUser();
@@ -37,34 +37,37 @@ public class MainActivity extends AppCompatActivity {
         if (user == null) {
             Intent intent = new Intent(getApplicationContext(), Login.class);
             startActivity(intent);
-            finish(); // Close the current activity
+            finish();
         } else {
             // Show the logged-in user's email
-            textview.setText(user.getEmail());
+            textView.setText(user.getEmail());
         }
 
-        // Set a click listener for the logout button
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Sign out the current user
-                FirebaseAuth.getInstance().signOut();
-
-                // Redirect to the login activity
-                Intent intent = new Intent(getApplicationContext(), Login.class);
-                startActivity(intent);
-                finish(); // Close the current activity
-            }
+        // Logout button logic
+        logoutButton.setOnClickListener(view -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(getApplicationContext(), Login.class);
+            startActivity(intent);
+            finish();
         });
 
-        // Set a click listener for the Launch Calculator button
-        launchCalculatorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Launch the Calculator activity
-                Intent intent = new Intent(MainActivity.this, Calculator.class);
-                startActivity(intent);
-            }
+        // Navigate to Add Expense
+        addExpenseButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, AddExpenseActivity.class);
+            startActivity(intent);
+        });
+
+        // Navigate to Expense History
+        viewHistoryButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, ExpenseHistoryActivity.class);
+            startActivity(intent);
+        });
+
+        // Navigate to Expense Summary
+        viewSummaryButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, ExpenseSummaryActivity.class);
+            startActivity(intent);
         });
     }
 }
+
