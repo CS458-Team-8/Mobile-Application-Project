@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
-    Button logoutButton, addExpenseButton, viewHistoryButton, viewSummaryButton;
+    Button logoutButton, addExpenseButton, viewHistoryButton, viewSummaryButton, launchCalculatorButton;
     TextView textView;
     FirebaseUser user;
 
@@ -22,28 +22,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize FirebaseAuth
+        // Initialize FirebaseAuth and buttons
         auth = FirebaseAuth.getInstance();
         logoutButton = findViewById(R.id.logout);
         addExpenseButton = findViewById(R.id.btn_add_expense);
-        viewHistoryButton = findViewById(R.id.btn_view_summary);
+        viewHistoryButton = findViewById(R.id.btn_view_history);
         viewSummaryButton = findViewById(R.id.btn_view_summary);
+        launchCalculatorButton = findViewById(R.id.btn_launch_calculator);
         textView = findViewById(R.id.user_details);
 
         // Get the current user
         user = auth.getCurrentUser();
 
-        // If the user is not logged in, redirect to the login activity
+        // Redirect to Login if not authenticated
         if (user == null) {
             Intent intent = new Intent(getApplicationContext(), Login.class);
             startActivity(intent);
             finish();
         } else {
-            // Show the logged-in user's email
-            textView.setText(user.getEmail());
+            // Display logged-in user's email
+            textView.setText("Welcome, " + user.getEmail());
         }
 
-        // Logout button logic
+        // Logout functionality
         logoutButton.setOnClickListener(view -> {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(getApplicationContext(), Login.class);
@@ -51,21 +52,27 @@ public class MainActivity extends AppCompatActivity {
             finish();
         });
 
-        // Navigate to Add Expense
+        // Navigate to Add Expense screen
         addExpenseButton.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, AddExpenseActivity.class);
             startActivity(intent);
         });
 
-        // Navigate to Expense History
+        // Navigate to Expense History screen
         viewHistoryButton.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, ExpenseHistoryActivity.class);
             startActivity(intent);
         });
 
-        // Navigate to Expense Summary
+        // Navigate to Expense Summary screen
         viewSummaryButton.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, ExpenseSummaryActivity.class);
+            startActivity(intent);
+        });
+
+        // Navigate to Calculator screen
+        launchCalculatorButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, Calculator.class);
             startActivity(intent);
         });
     }
