@@ -7,14 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".Calculator">
 
-
+    <!-- Data TextView -->
     <TextView
         android:id="@+id/data_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="922dp"
-        android:textAlignment="viewEnd"
         android:layout_marginEnd="12dp"
+        android:textAlignment="viewEnd"
         android:textSize="28sp"
         android:text="@string/_65_25"
         android:textColor="@color/black"
@@ -22,6 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Result TextView -->
     <TextView
         android:id="@+id/result_tv"
         android:layout_width="match_parent"
@@ -36,34 +36,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Separator Line -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/linecolor"
         app:layout_constraintBottom_toBottomOf="@+id/result_tv" />
 
-
+    <!-- Calculator Button Layouts -->
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btn_back_to_main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <!-- Row 1 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="horizontal">
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_clear"
                 style="@style/operatorButton"
                 android:onClick="onClearClick"
                 android:text="@string/c" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_back"
                 style="@style/operatorButton"
@@ -71,13 +71,11 @@
                 android:onClick="onBackClick"
                 app:icon="@drawable/baseline_backspace_24"
                 app:iconTint="@color/btnBackground2"/>
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_modulo"
                 style="@style/operatorButton"
                 android:onClick="onOperatorClick"
                 android:text="@string/percent" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_divide"
                 style="@style/operatorButton"
@@ -85,62 +83,55 @@
                 android:text="@string/divide" />
         </LinearLayout>
 
+        <!-- Row 2 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="horizontal">
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_7"
                 style="@style/digitbutton"
                 android:onClick="onDigitClick"
                 android:text="@string/_7" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_8"
                 style="@style/digitbutton"
                 android:onClick="onDigitClick"
                 android:text="@string/_8" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_9"
                 style="@style/digitbutton"
                 android:onClick="onDigitClick"
                 android:text="@string/_9" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_multiply"
                 style="@style/operatorButton"
                 android:onClick="onOperatorClick"
                 android:text="@string/multiply" />
-
         </LinearLayout>
 
+        <!-- Row 3 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="horizontal">
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_4"
                 style="@style/digitbutton"
                 android:onClick="onDigitClick"
                 android:text="@string/_4" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_5"
                 style="@style/digitbutton"
                 android:onClick="onDigitClick"
                 android:text="@string/_5" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_6"
                 style="@style/digitbutton"
                 android:onClick="onDigitClick"
                 android:text="@string/_6" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_add"
                 style="@style/operatorButton"
@@ -148,30 +139,27 @@
                 android:text="@string/add" />
         </LinearLayout>
 
+        <!-- Row 4 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="horizontal">
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_1"
                 style="@style/digitbutton"
                 android:onClick="onDigitClick"
                 android:text="@string/_1" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_2"
                 style="@style/digitbutton"
                 android:onClick="onDigitClick"
                 android:text="@string/_2" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_3"
                 style="@style/digitbutton"
                 android:onClick="onDigitClick"
                 android:text="@string/_3" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_subtract"
                 style="@style/operatorButton"
@@ -179,31 +167,28 @@
                 android:text="@string/subtract" />
         </LinearLayout>
 
+        <!-- Row 5 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="horizontal">
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_allclear"
                 style="@style/operatorButton"
                 android:onClick="onAllclearClick"
                 android:text="@string/allclear"
                 android:textSize="21sp" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_0"
                 style="@style/digitbutton"
                 android:onClick="onDigitClick"
                 android:text="@string/_0" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_dot"
                 style="@style/digitbutton"
                 android:onClick="onDigitClick"
                 android:text="@string/decimel" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_equal"
                 style="@style/operatorButton"
@@ -212,5 +197,15 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Back Button -->
+    <Button
+        android:id="@+id/btn_back_to_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
