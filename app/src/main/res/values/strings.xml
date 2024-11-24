@@ -31,6 +31,7 @@
     <string name="create_user">Create User</string>
     <string name="back_to_main">Back to Main</string>
     <string name="role">Role</string>
+    <string name="back">Back</string>
 
     <string-array name="expense_categories">
         <item>Groceries</item>
