@@ -25,7 +25,7 @@ public class Calculator extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calculator); // Set the layout directly
+        setContentView(R.layout.activity_calculator);
 
         // Initialize views using findViewById()
         dataTv = findViewById(R.id.data_tv);
@@ -56,6 +56,7 @@ public class Calculator extends AppCompatActivity {
         Button btnClear = findViewById(R.id.btn_clear);
         Button btnBack = findViewById(R.id.btn_back);
         Button btnDot = findViewById(R.id.btn_dot);
+        Button backToMainButton = findViewById(R.id.btn_back_to_main);
 
         // Set listeners for digit buttons
         btn0.setOnClickListener(this::onDigitClick);
@@ -82,6 +83,9 @@ public class Calculator extends AppCompatActivity {
         btnClear.setOnClickListener(this::onClearClick);
         btnBack.setOnClickListener(this::onBackClick);
         btnDot.setOnClickListener(this::onDigitClick); // Treat dot as a digit here
+
+        // Set listener for back to main button
+        backToMainButton.setOnClickListener(view -> finish()); // Simply finish the current activity
     }
 
     public void onEqualClick(View view) {
