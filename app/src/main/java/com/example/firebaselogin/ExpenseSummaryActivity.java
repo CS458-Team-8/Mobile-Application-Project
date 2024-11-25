@@ -78,10 +78,17 @@ public class ExpenseSummaryActivity extends AppCompatActivity {
 
         // Configure PieChart data
         PieDataSet dataSet = new PieDataSet(entries, "Spending by Category");
+
+        // Apply neon colors
         dataSet.setColors(new int[]{
-                Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW, Color.CYAN
-        }); // Customize colors
-        dataSet.setValueTextColor(Color.BLACK);
+                Color.rgb(255, 105, 180), // Neon Pink
+                Color.rgb(50, 205, 50),   // Neon Green
+                Color.rgb(30, 144, 255),  // Neon Blue
+                Color.rgb(255, 255, 0),   // Neon Yellow
+                Color.rgb(255, 69, 0)     // Neon Orange
+        });
+
+        dataSet.setValueTextColor(Color.BLACK); // Black text for contrast
         dataSet.setValueTextSize(12f);
 
         PieData data = new PieData(dataSet);
@@ -89,10 +96,10 @@ public class ExpenseSummaryActivity extends AppCompatActivity {
         // Configure PieChart
         pieChart.setData(data);
         pieChart.setUsePercentValues(true);
-        pieChart.setEntryLabelColor(Color.BLACK);
-        pieChart.setHoleColor(Color.WHITE);
-        pieChart.setDescription(null);
-        pieChart.invalidate(); // Refresh the chart
+        pieChart.setEntryLabelColor(Color.BLACK); // Black labels for contrast
+        pieChart.setHoleColor(Color.WHITE);       // White hole for better visibility
+        pieChart.setDescription(null);           // Remove description text
+        pieChart.invalidate();                   // Refresh the chart
     }
 }
 
