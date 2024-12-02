@@ -13,16 +13,17 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-public class ExpenseAdapter extends FirestoreRecyclerAdapter<DocumentSnapshot, ExpenseAdapter.ExpenseViewHolder> {
+public class ExpenseAdapter extends FirestoreRecyclerAdapter<Expense, ExpenseAdapter.ExpenseViewHolder> {
 
     private final OnExpenseInteractionListener listener;
 
+    // Interface for interaction callbacks
     public interface OnExpenseInteractionListener {
-        void onEdit(DocumentSnapshot expense);
-        void onDelete(DocumentSnapshot expense);
+        void onEdit(Expense expense);
+        void onDelete(Expense expense);
     }
 
-    public ExpenseAdapter(@NonNull FirestoreRecyclerOptions<DocumentSnapshot> options, OnExpenseInteractionListener listener) {
+    public ExpenseAdapter(@NonNull FirestoreRecyclerOptions<Expense> options, OnExpenseInteractionListener listener) {
         super(options);
         this.listener = listener;
     }
@@ -36,9 +37,15 @@ public class ExpenseAdapter extends FirestoreRecyclerAdapter<DocumentSnapshot, E
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ExpenseViewHolder holder, int position, @NonNull DocumentSnapshot model) {
+    protected void onBindViewHolder(@NonNull ExpenseViewHolder holder, int position, @NonNull Expense model) {
+        // Set the document ID in the model
+        DocumentSnapshot snapshot = getSnapshots().getSnapshot(position);
+        model.setId(snapshot.getId());
+
+        // Bind the model to the view holder
         holder.bind(model, listener);
     }
+
 
     static class ExpenseViewHolder extends RecyclerView.ViewHolder {
         TextView amountText, dateText, categoryText, descriptionText;
@@ -54,14 +61,16 @@ public class ExpenseAdapter extends FirestoreRecyclerAdapter<DocumentSnapshot, E
             deleteButton = itemView.findViewById(R.id.delete_button);
         }
 
-        public void bind(DocumentSnapshot expense, OnExpenseInteractionListener listener) {
-            amountText.setText(String.valueOf(expense.get("amount")));
-            dateText.setText(String.valueOf(expense.get("date")));
-            categoryText.setText(String.valueOf(expense.get("category")));
-            descriptionText.setText(String.valueOf(expense.get("description")));
+        public void bind(Expense expense, OnExpenseInteractionListener listener) {
+            amountText.setText(expense.getAmount());
+            dateText.setText(expense.getDate());
+            categoryText.setText(expense.getCategory());
+            descriptionText.setText(expense.getDescription());
 
             editButton.setOnClickListener(view -> listener.onEdit(expense));
             deleteButton.setOnClickListener(view -> listener.onDelete(expense));
         }
+
     }
 }
+
