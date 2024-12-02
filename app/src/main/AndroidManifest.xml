@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Required permission for internet access -->
+    <!-- Required Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +15,18 @@
         android:theme="@style/Theme.Material3.Light"
         tools:targetApi="31">
 
-        <!--SplashScreen-->
+        <!-- Firebase Metadata -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/notification_color" />
+        <meta-data
+            android:name="com.google.firebase.analytics.collection_enabled"
+            android:value="true" />
+
+        <!-- SplashScreen -->
         <activity
             android:name=".SplashScreen"
             android:exported="true"
@@ -29,8 +41,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Material3.Light.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.Material3.Light.NoActionBar" />
 
         <!-- Register Activity -->
         <activity
@@ -43,16 +54,40 @@
             android:name=".Login"
             android:theme="@style/Theme.Material3.Light.NoActionBar"
             android:exported="false"
-            android:label="@string/login">
-        </activity>
-
+            android:label="@string/login" />
 
         <!-- Calculator Activity -->
         <activity
             android:name=".Calculator"
             android:theme="@style/Theme.Material3.Light.NoActionBar"
-            android:exported="true" /> <!-- Ensure this is true to allow launching -->
+            android:exported="true" />
 
+        <!-- AdminDashboard Activity -->
+        <activity android:name=".AdminDashboard" />
+
+        <!-- CreateUserActivity -->
+        <activity android:name=".CreateUserActivity" />
+
+        <!-- ExpenseHistoryActivity -->
+        <activity
+            android:name=".ExpenseHistoryActivity"
+            android:theme="@style/Theme.Material3.Light.NoActionBar"
+            android:exported="false" />
+
+        <!-- AddExpenseActivity -->
+        <activity
+            android:name=".AddExpenseActivity"
+            android:theme="@style/Theme.Material3.Light.NoActionBar"
+            android:exported="false" />
+
+        <!-- ExpenseSummaryActivity -->
+        <activity
+            android:name=".ExpenseSummaryActivity"
+            android:theme="@style/Theme.Material3.Light.NoActionBar"
+            android:exported="false" />
     </application>
 
+
+
 </manifest>
+

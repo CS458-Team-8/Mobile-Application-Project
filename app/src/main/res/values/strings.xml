@@ -28,5 +28,25 @@
     <string name="decimel">.</string>
     <string name="equals">=</string>
     <string name="logout">Logout</string>
+    <string name="create_user">Create User</string>
+    <string name="back_to_main">Back to Main</string>
+    <string name="role">Role</string>
+    <string name="back">Back</string>
 
+    <string-array name="expense_categories">
+        <item>Groceries</item>
+        <item>Rent</item>
+        <item>Utilities</item>
+        <item>Transportation</item>
+        <item>Entertainment</item>
+        <item>Dining</item>
+        <item>Healthcare</item>
+        <item>Education</item>
+        <item>Others</item>
+    </string-array>
+
+    <string-array name="user_roles">
+        <item>viewer</item>
+        <item>editor</item>
+    </string-array>
 </resources>

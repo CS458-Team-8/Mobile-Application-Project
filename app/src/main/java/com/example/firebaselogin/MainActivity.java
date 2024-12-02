@@ -5,66 +5,147 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
-    Button logoutButton;
-    Button launchCalculatorButton; // New button for launching calculator
-    TextView textview;
+    FirebaseFirestore db;
     FirebaseUser user;
+
+    TextView userDetailsTextView, roleTextView;
+    Button logoutButton, addExpenseButton, viewHistoryButton, viewSummaryButton, launchCalculatorButton, adminButton, viewerButton, adminDashboardButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize FirebaseAuth
+        // Initialize Firebase components
         auth = FirebaseAuth.getInstance();
-        logoutButton = findViewById(R.id.logout);
-        launchCalculatorButton = findViewById(R.id.btn_launch_calculator); // Initialize calculator button
-        textview = findViewById(R.id.user_details);
-
-        // Get the current user
+        db = FirebaseFirestore.getInstance();
         user = auth.getCurrentUser();
 
-        // If the user is not logged in, redirect to the login activity
+        // Bind UI elements
+        userDetailsTextView = findViewById(R.id.user_details);
+        roleTextView = findViewById(R.id.role);
+        logoutButton = findViewById(R.id.logout);
+        addExpenseButton = findViewById(R.id.btn_add_expense);
+        viewHistoryButton = findViewById(R.id.btn_view_history);
+        viewSummaryButton = findViewById(R.id.btn_view_summary);
+        launchCalculatorButton = findViewById(R.id.btn_launch_calculator);
+        adminButton = findViewById(R.id.admin_button);
+        viewerButton = findViewById(R.id.viewer_button);
+        adminDashboardButton = findViewById(R.id.btn_admin_dashboard);
+
+        // Ensure the user is logged in
         if (user == null) {
+            // Redirect to login if the user is not authenticated
+            Intent intent = new Intent(getApplicationContext(), Login.class);
+            startActivity(intent);
+            finish();
+        } else {
+            // Display the user's email
+            userDetailsTextView.setText("Welcome, " + user.getEmail());
+
+            // Fetch the user's role and adjust UI accordingly
+            fetchAndAdjustUIBasedOnRole(user.getUid());
+        }
+
+        // Handle logout button click
+        logoutButton.setOnClickListener(view -> {
+            auth.signOut(); // Sign out the current user
             Intent intent = new Intent(getApplicationContext(), Login.class);
             startActivity(intent);
             finish(); // Close the current activity
+        });
+
+        // Handle Add Expense button click
+        addExpenseButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, AddExpenseActivity.class);
+            startActivity(intent);
+        });
+
+        // Handle View History button click
+        viewHistoryButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, ExpenseHistoryActivity.class);
+            startActivity(intent);
+        });
+
+        // Handle View Summary button click
+        viewSummaryButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, ExpenseSummaryActivity.class);
+            startActivity(intent);
+        });
+
+        // Handle Calculator button click
+        launchCalculatorButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, Calculator.class);
+            startActivity(intent);
+        });
+
+        // Handle Admin Dashboard button click
+        adminDashboardButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, AdminDashboard.class);
+            startActivity(intent);
+        });
+    }
+
+    /**
+     * Fetches the user's role from Firestore and adjusts the UI based on their role.
+     *
+     * @param userId The user's Firebase UID.
+     */
+    private void fetchAndAdjustUIBasedOnRole(String userId) {
+        db.collection("users").document(userId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            // Get the user's role from Firestore
+                            String role = document.getString("role");
+                            roleTextView.setText("Role: " + role);
+
+                            // Adjust UI based on the user's role
+                            adjustUIBasedOnRole(role);
+                        } else {
+                            Toast.makeText(MainActivity.this, "User role not found.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "Error fetching role: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    /**
+     * Adjusts the UI elements based on the user's role.
+     *
+     * @param role The role of the user (e.g., "admin", "viewer").
+     */
+    private void adjustUIBasedOnRole(String role) {
+        if ("admin".equals(role)) {
+            adminButton.setVisibility(View.VISIBLE);
+            viewerButton.setVisibility(View.GONE);
+            adminDashboardButton.setVisibility(View.VISIBLE); // Show the Admin Dashboard button for admins
+            Toast.makeText(this, "Welcome, Admin!", Toast.LENGTH_SHORT).show();
+        } else if ("viewer".equals(role)) {
+            adminButton.setVisibility(View.GONE);
+            viewerButton.setVisibility(View.VISIBLE);
+            adminDashboardButton.setVisibility(View.GONE); // Hide the Admin Dashboard button for viewers
+            Toast.makeText(this, "Welcome, Viewer!", Toast.LENGTH_SHORT).show();
         } else {
-            // Show the logged-in user's email
-            textview.setText(user.getEmail());
+            // Default case for unknown roles
+            adminButton.setVisibility(View.GONE);
+            viewerButton.setVisibility(View.GONE);
+            adminDashboardButton.setVisibility(View.GONE);
+            Toast.makeText(this, "Welcome, User!", Toast.LENGTH_SHORT).show();
         }
-
-        // Set a click listener for the logout button
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Sign out the current user
-                FirebaseAuth.getInstance().signOut();
-
-                // Redirect to the login activity
-                Intent intent = new Intent(getApplicationContext(), Login.class);
-                startActivity(intent);
-                finish(); // Close the current activity
-            }
-        });
-
-        // Set a click listener for the Launch Calculator button
-        launchCalculatorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Launch the Calculator activity
-                Intent intent = new Intent(MainActivity.this, Calculator.class);
-                startActivity(intent);
-            }
-        });
     }
 }
