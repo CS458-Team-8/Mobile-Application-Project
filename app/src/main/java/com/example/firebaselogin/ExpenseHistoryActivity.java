@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -22,24 +23,55 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Displays and manages the expense history for the user's group.
+ * Displays and manages the expense history for the user's group,
+ * including exporting to CSV and PDF.
  */
 public class ExpenseHistoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ExpenseAdapter adapter;
     private FirebaseFirestore db;
+    private ExpenseExporter expenseExporter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_history);
 
+        // Initialize Firebase and exporter
+        db = FirebaseFirestore.getInstance();
+        expenseExporter = new ExpenseExporter(this);
+
+        // Set up RecyclerView
         recyclerView = findViewById(R.id.expense_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        db = FirebaseFirestore.getInstance();
+        // Load expenses
         loadExpenses();
+
+        // Bind export buttons
+        Button exportCsvButton = findViewById(R.id.export_csv_button);
+        Button exportPdfButton = findViewById(R.id.export_pdf_button);
+
+        // Handle Export to CSV
+        exportCsvButton.setOnClickListener(v -> getCurrentUserGroup(groupId -> {
+            if (groupId != null) {
+                expenseExporter.exportToCSV(groupId);
+                Toast.makeText(this, "Exported to CSV", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Group ID not found!", Toast.LENGTH_SHORT).show();
+            }
+        }));
+
+        // Handle Export to PDF
+        exportPdfButton.setOnClickListener(v -> getCurrentUserGroup(groupId -> {
+            if (groupId != null) {
+                expenseExporter.exportToPDF(groupId);
+                Toast.makeText(this, "Exported to PDF", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Group ID not found!", Toast.LENGTH_SHORT).show();
+            }
+        }));
     }
 
     private void loadExpenses() {
@@ -140,11 +172,26 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
         });
     }
 
+    private void getCurrentUserGroup(GroupIdCallback callback) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.collection("users").document(userId).get().addOnSuccessListener(userDoc -> {
+            if (userDoc.exists()) {
+                callback.onGroupIdFetched(userDoc.getString("adminGroup"));
+            } else {
+                callback.onGroupIdFetched(null);
+            }
+        }).addOnFailureListener(e -> callback.onGroupIdFetched(null));
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
         if (adapter != null) {
             adapter.stopListening();
         }
+    }
+
+    public interface GroupIdCallback {
+        void onGroupIdFetched(String groupId);
     }
 }
