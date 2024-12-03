@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -64,10 +63,16 @@
             android:exported="true" />
 
         <!-- AdminDashboard Activity -->
-        <activity android:name=".AdminDashboard" />
+        <activity
+            android:name=".AdminDashboard"
+            android:theme="@style/Theme.Material3.Light.NoActionBar"
+            android:exported="false" />
 
         <!-- CreateUserActivity -->
-        <activity android:name=".CreateUserActivity" />
+        <activity
+            android:name=".CreateUserActivity"
+            android:theme="@style/Theme.Material3.Light.NoActionBar"
+            android:exported="false" />
 
         <!-- ExpenseHistoryActivity -->
         <activity
@@ -86,9 +91,12 @@
             android:name=".ExpenseSummaryActivity"
             android:theme="@style/Theme.Material3.Light.NoActionBar"
             android:exported="false" />
+
+        <!-- BudgetActivity -->
+        <activity
+            android:name=".BudgetActivity"
+            android:theme="@style/Theme.Material3.Light.NoActionBar"
+            android:exported="true" />
     </application>
-
-
-
 </manifest>
 

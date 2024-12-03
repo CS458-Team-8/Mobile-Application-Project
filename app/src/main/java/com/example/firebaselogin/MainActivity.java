@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser user;
 
     TextView userDetailsTextView, roleTextView;
-    Button logoutButton, addExpenseButton, viewHistoryButton, viewSummaryButton, launchCalculatorButton, adminButton, viewerButton, adminDashboardButton;
+    Button logoutButton, addExpenseButton, viewHistoryButton, viewSummaryButton, launchCalculatorButton, adminButton, viewerButton, adminDashboardButton, budgetButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         adminButton = findViewById(R.id.admin_button);
         viewerButton = findViewById(R.id.viewer_button);
         adminDashboardButton = findViewById(R.id.btn_admin_dashboard);
+        budgetButton = findViewById(R.id.btn_budget_settings); // New button for Budget Settings
 
         // Ensure the user is logged in
         if (user == null) {
@@ -96,6 +97,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, AdminDashboard.class);
             startActivity(intent);
         });
+
+        // Handle Budget Settings button click
+        budgetButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, BudgetActivity.class);
+            startActivity(intent);
+        });
     }
 
     /**
@@ -134,18 +141,22 @@ public class MainActivity extends AppCompatActivity {
             adminButton.setVisibility(View.VISIBLE);
             viewerButton.setVisibility(View.GONE);
             adminDashboardButton.setVisibility(View.VISIBLE); // Show the Admin Dashboard button for admins
+            budgetButton.setVisibility(View.VISIBLE); // Allow budget setting for admins
             Toast.makeText(this, "Welcome, Admin!", Toast.LENGTH_SHORT).show();
         } else if ("viewer".equals(role)) {
             adminButton.setVisibility(View.GONE);
             viewerButton.setVisibility(View.VISIBLE);
             adminDashboardButton.setVisibility(View.GONE); // Hide the Admin Dashboard button for viewers
+            budgetButton.setVisibility(View.GONE); // Hide budget setting for viewers
             Toast.makeText(this, "Welcome, Viewer!", Toast.LENGTH_SHORT).show();
         } else {
             // Default case for unknown roles
             adminButton.setVisibility(View.GONE);
             viewerButton.setVisibility(View.GONE);
             adminDashboardButton.setVisibility(View.GONE);
+            budgetButton.setVisibility(View.GONE);
             Toast.makeText(this, "Welcome, User!", Toast.LENGTH_SHORT).show();
         }
     }
 }
+
