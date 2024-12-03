@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.1"
+firebaseUiFirestore = "8.0.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -16,6 +17,9 @@ constraintlayout = "2.1.4"
 mpandroidchart = "3.1.0"
 
 [libraries]
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+firebase-ui-firestore = { module = "com.firebaseui:firebase-ui-firestore", version.ref = "firebaseUiFirestore" }
+google-firebase-auth = { module = "com.google.firebase:firebase-auth" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
