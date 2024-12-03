@@ -18,14 +18,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Displays and manages the expense history for the user's group,
- * including exporting to CSV and PDF.
- */
 public class ExpenseHistoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -139,12 +136,14 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
         }
 
         builder.setPositiveButton("Save", (dialog, which) -> {
-            // Update the expense
+            // Update the expense and check budget
+            String updatedAmount = amountEditText.getText().toString().trim();
             updateExpense(expense.getId(),
-                    amountEditText.getText().toString().trim(),
+                    updatedAmount,
                     descriptionEditText.getText().toString().trim(),
                     dateEditText.getText().toString().trim(),
                     categorySpinner.getSelectedItem().toString());
+            checkBudgetLimit(expense.getCategory(), Double.parseDouble(updatedAmount));
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
@@ -168,6 +167,33 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
                 db.collection("expenses").document(expenseId).update(updates)
                         .addOnSuccessListener(aVoid -> Toast.makeText(this, "Expense updated successfully", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e -> Toast.makeText(this, "Failed to update expense: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void checkBudgetLimit(String category, double amount) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.collection("users").document(userId).get().addOnSuccessListener(userDoc -> {
+            if (userDoc.exists()) {
+                String group = userDoc.getString("adminGroup");
+
+                db.collection("budgets")
+                        .whereEqualTo("group", group)
+                        .whereEqualTo("category", category)
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            for (QueryDocumentSnapshot budgetDoc : querySnapshot) {
+                                Double budgetAmount = budgetDoc.getDouble("amount");
+                                if (budgetAmount != null) {
+                                    if (amount >= budgetAmount * 0.9) {
+                                        Toast.makeText(this, "Warning: Spending in " + category + " is nearing your budget!", Toast.LENGTH_LONG).show();
+                                    }
+                                    if (amount > budgetAmount) {
+                                        Toast.makeText(this, "Alert: Spending in " + category + " exceeds your budget!", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }
+                        });
             }
         });
     }

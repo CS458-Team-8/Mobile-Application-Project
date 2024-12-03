@@ -1,0 +1,39 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Spinner
+        android:id="@+id/category_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/expense_categories"
+        android:prompt="@string/select_category" />
+
+    <EditText
+        android:id="@+id/budget_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_budget" />
+
+    <Spinner
+        android:id="@+id/timeframe_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/timeframes"
+        android:prompt="@string/select_timeframe" />
+
+    <Button
+        android:id="@+id/save_budget_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save_budget" />
+
+    <Button
+        android:id="@+id/reset_budget_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reset_budget" />
+</LinearLayout>
