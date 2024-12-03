@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
@@ -86,21 +87,38 @@ public class AddExpenseActivity extends AppCompatActivity {
             return;
         }
 
-        Map<String, Object> expense = new HashMap<>();
-        expense.put("amount", amount);
-        expense.put("description", description);
-        expense.put("date", date);
-        expense.put("category", category);
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        db.collection("expenses")
-                .add(expense)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "Expense added successfully", Toast.LENGTH_SHORT).show();
-                    finish(); // Close activity after saving
+        // Fetch the user's adminGroup
+        db.collection("users").document(userId).get()
+                .addOnSuccessListener(userDoc -> {
+                    if (userDoc.exists()) {
+                        String group = userDoc.getString("adminGroup");
+
+                        // Prepare the expense data
+                        Map<String, Object> expense = new HashMap<>();
+                        expense.put("amount", amount);
+                        expense.put("description", description);
+                        expense.put("date", date);
+                        expense.put("category", category);
+                        expense.put("group", group); // Associate expense with the group
+
+                        // Save the expense to Firestore
+                        db.collection("expenses")
+                                .add(expense)
+                                .addOnSuccessListener(documentReference -> {
+                                    Toast.makeText(this, "Expense added successfully", Toast.LENGTH_SHORT).show();
+                                    finish(); // Close activity after saving
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(this, "Error adding expense", Toast.LENGTH_SHORT).show();
+                                });
+                    } else {
+                        Toast.makeText(this, "Unable to fetch user group", Toast.LENGTH_SHORT).show();
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error adding expense", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to fetch user information", Toast.LENGTH_SHORT).show();
                 });
     }
 }
-
