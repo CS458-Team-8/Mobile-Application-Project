@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class CreateUserActivity extends AppCompatActivity {
     Spinner spinnerRole;
     Button btnCreateUser, btnBackToAdmin;
 
-    FirebaseAuth mAuth; // Main auth instance (admin stays logged in)
+    FirebaseAuth mAuth;
     FirebaseFirestore db;
 
     @Override
@@ -32,8 +31,8 @@ public class CreateUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_user);
 
-        // Initialize Firebase components
-        mAuth = FirebaseAuth.getInstance(); // Main auth instance (admin stays logged in)
+        // Initialize Firebase
+        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
         // Bind UI elements
@@ -56,7 +55,7 @@ public class CreateUserActivity extends AppCompatActivity {
         btnBackToAdmin.setOnClickListener(view -> {
             Intent intent = new Intent(CreateUserActivity.this, AdminDashboard.class);
             startActivity(intent);
-            finish(); // Close current activity
+            finish();
         });
     }
 
@@ -70,31 +69,40 @@ public class CreateUserActivity extends AppCompatActivity {
             return;
         }
 
-        // Step 1: Create the user in Firebase Authentication
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Step 2: Once the user is created in Firebase Authentication, add them to Firestore
-                        String userId = task.getResult().getUser().getUid(); // Get the UID of the newly created user
+        // Fetch current admin's group ID
+        String adminId = mAuth.getCurrentUser().getUid();
+        db.collection("users").document(adminId).get()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        String adminGroup = document.getString("adminGroup");
 
-                        // Save user data to Firestore
-                        Map<String, Object> userMap = new HashMap<>();
-                        userMap.put("email", email);
-                        userMap.put("role", role); // Save role for the new user
+                        // Step 1: Create the user in Firebase Authentication
+                        mAuth.createUserWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        String userId = task.getResult().getUser().getUid();
 
-                        db.collection("users").document(userId)
-                                .set(userMap)
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(this, "User created successfully!", Toast.LENGTH_SHORT).show();
-                                    // Step 3: Navigate back to Admin Dashboard without signing in the user
-                                    startActivity(new Intent(CreateUserActivity.this, AdminDashboard.class));
-                                    finish(); // Close current activity
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(this, "Error saving user to Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        // Step 2: Save user in Firestore
+                                        Map<String, Object> userMap = new HashMap<>();
+                                        userMap.put("email", email);
+                                        userMap.put("role", role);
+                                        userMap.put("adminGroup", adminGroup);
+
+                                        db.collection("users").document(userId).set(userMap)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Toast.makeText(this, "User created successfully!", Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(CreateUserActivity.this, AdminDashboard.class));
+                                                    finish();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(this, "Error saving user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                });
+                                    } else {
+                                        Toast.makeText(this, "Error creating user: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
                                 });
                     } else {
-                        Toast.makeText(this, "Error creating user in Firebase Authentication: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to fetch admin group!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

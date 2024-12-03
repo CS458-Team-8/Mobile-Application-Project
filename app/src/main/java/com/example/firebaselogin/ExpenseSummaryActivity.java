@@ -10,6 +10,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -17,6 +18,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Displays a summary of expenses by category for the current user's group.
+ */
 public class ExpenseSummaryActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
@@ -35,36 +39,50 @@ public class ExpenseSummaryActivity extends AppCompatActivity {
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
 
-        // Load the expense summary
+        // Load the expense summary for the current user's group
         loadExpenseSummary();
     }
 
     private void loadExpenseSummary() {
-        db.collection("expenses").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                Map<String, Float> categoryTotals = new HashMap<>();
-                float totalSpending = 0;
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    String category = document.getString("category");
-                    String amountString = document.getString("amount");
-                    float amount = 0;
+        // Fetch the adminGroup for the current user
+        db.collection("users").document(userId).get().addOnSuccessListener(userDoc -> {
+            if (userDoc.exists()) {
+                String group = userDoc.getString("adminGroup");
 
-                    // Ensure valid number parsing
-                    try {
-                        amount = Float.parseFloat(amountString);
-                    } catch (NumberFormatException e) {
-                        amount = 0;
-                    }
+                // Query expenses for the user's group
+                db.collection("expenses")
+                        .whereEqualTo("group", group)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                Map<String, Float> categoryTotals = new HashMap<>();
+                                float totalSpending = 0;
 
-                    totalSpending += amount;
-                    categoryTotals.put(category, categoryTotals.getOrDefault(category, 0f) + amount);
-                }
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String category = document.getString("category");
+                                    String amountString = document.getString("amount");
+                                    float amount = 0;
 
-                displaySummary(totalSpending, categoryTotals);
+                                    // Ensure valid number parsing
+                                    try {
+                                        amount = Float.parseFloat(amountString);
+                                    } catch (NumberFormatException e) {
+                                        amount = 0;
+                                    }
+
+                                    totalSpending += amount;
+                                    categoryTotals.put(category, categoryTotals.getOrDefault(category, 0f) + amount);
+                                }
+
+                                displaySummary(totalSpending, categoryTotals);
+                            }
+                        });
             }
         });
     }
+
 
     private void displaySummary(float totalSpending, Map<String, Float> categoryTotals) {
         // Set total spending text
@@ -79,7 +97,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity {
         // Configure PieChart data
         PieDataSet dataSet = new PieDataSet(entries, "Spending by Category");
 
-        // Apply neon colors
+        // Apply custom colors
         dataSet.setColors(new int[]{
                 Color.rgb(255, 105, 180), // Neon Pink
                 Color.rgb(50, 205, 50),   // Neon Green
@@ -102,4 +120,3 @@ public class ExpenseSummaryActivity extends AppCompatActivity {
         pieChart.invalidate();                   // Refresh the chart
     }
 }
-
