@@ -33,6 +33,15 @@
     <string name="role">Role</string>
     <string name="back">Back</string>
 
+    <!-- New strings for Budget Setting -->
+    <string name="select_category">Select Category</string>
+    <string name="enter_budget">Enter Budget Amount</string>
+    <string name="select_timeframe">Select Timeframe</string>
+    <string name="save_budget">Save Budget</string>
+    <string name="reset_budget">Reset Budget</string>
+    <string name="budget_settings">Budget Settings</string>
+    <string name="splash_screen">splash screen</string>
+
     <string-array name="expense_categories">
         <item>Groceries</item>
         <item>Rent</item>
@@ -48,5 +57,12 @@
     <string-array name="user_roles">
         <item>viewer</item>
         <item>editor</item>
+        <item>admin</item> <!-- Added admin role -->
+    </string-array>
+
+    <!-- New array for timeframes -->
+    <string-array name="timeframes">
+        <item>Weekly</item>
+        <item>Monthly</item>
     </string-array>
 </resources>

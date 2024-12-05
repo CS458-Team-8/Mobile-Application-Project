@@ -1,8 +1,10 @@
 <!-- res/drawable/splash_screen.xml -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/white" /> <!-- Background color -->
     <item>
         <bitmap
-            android:gravity="center"
-            android:src="@drawable/logo" /> <!-- logo image -->
+            android:src="@drawable/logo"
+            android:tileMode="disabled"
+            android:scaleType="fitXY" />
     </item>
 </layer-list>
