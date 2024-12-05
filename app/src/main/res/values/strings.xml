@@ -40,6 +40,7 @@
     <string name="save_budget">Save Budget</string>
     <string name="reset_budget">Reset Budget</string>
     <string name="budget_settings">Budget Settings</string>
+    <string name="splash_screen">splash screen</string>
 
     <string-array name="expense_categories">
         <item>Groceries</item>
