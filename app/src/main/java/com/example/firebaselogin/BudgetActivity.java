@@ -140,15 +140,23 @@ public class BudgetActivity extends AppCompatActivity {
                                             timeframeSpinner.setSelection(spinnerPosition);
                                         }
                                     } else {
-                                        // Clear fields if no budget exists for the selected category
+                                        // Clear fields and show a user-friendly toast
                                         budgetAmountEditText.setText("");
                                         timeframeSpinner.setSelection(0);
+                                        Toast.makeText(this, "Create a new budget entry", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .addOnFailureListener(e -> {
-                                    Toast.makeText(this, "Error loading budget: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    budgetAmountEditText.setText("");
+                                    timeframeSpinner.setSelection(0);
+                                    Toast.makeText(this, "Create a new budget entry", Toast.LENGTH_SHORT).show();
                                 });
                     }
+                })
+                .addOnFailureListener(e -> {
+                    // Show a generic error message for user retrieval issues
+                    Toast.makeText(this, "Error retrieving user information. Please check your connection.", Toast.LENGTH_SHORT).show();
                 });
     }
+
 }
