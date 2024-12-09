@@ -2,6 +2,7 @@ package com.example.firebaselogin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +67,7 @@ public class Register extends AppCompatActivity {
         adminData.put("email", email);
         adminData.put("role", "admin");
         adminData.put("adminGroup", groupId);
+        adminData.put("fcmToken", "");
 
         db.collection("users").document(userId).set(adminData)
                 .addOnSuccessListener(aVoid -> {
@@ -75,10 +79,14 @@ public class Register extends AppCompatActivity {
                     db.collection("groups").document(groupId).set(groupData);
                     Toast.makeText(this, "Admin registered successfully!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Register.this, MainActivity.class));
-                    finish();
+
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error saving admin: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+
+        // Get new FCM token
+        FirebaseMessaging.getInstance().getToken();
+        finish();
     }
 }

@@ -3,6 +3,7 @@ package com.example.firebaselogin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -21,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Objects;
 
@@ -85,6 +87,8 @@ public class Login extends AppCompatActivity {
                 return;
             }
 
+
+
             // Authenticate user with Firebase Auth
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
@@ -93,6 +97,8 @@ public class Login extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
                                 fetchUserRoleAndProceed(user.getUid());
+                                // Create new FCM token
+                                FirebaseMessaging.getInstance().getToken();
                             }
                         } else {
                             Toast.makeText(Login.this, "Authentication failed. " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
@@ -125,7 +131,6 @@ public class Login extends AppCompatActivity {
                             // Save role and email in UserManager
                             UserManager.getInstance().setRole(role);
                             UserManager.getInstance().setEmail(email);
-
                             // Navigate to MainActivity
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);

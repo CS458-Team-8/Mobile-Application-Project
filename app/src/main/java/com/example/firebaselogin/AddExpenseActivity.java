@@ -102,6 +102,7 @@ public class AddExpenseActivity extends AppCompatActivity {
                         expense.put("date", date);
                         expense.put("category", category);
                         expense.put("group", group); // Associate expense with the group
+                        expense.put("user", userId);
 
                         // Save the expense to Firestore
                         db.collection("expenses")
