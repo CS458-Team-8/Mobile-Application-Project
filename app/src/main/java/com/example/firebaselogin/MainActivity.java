@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseFirestore db;
     FirebaseUser user;
+    NotificationService notificationService;
 
     TextView userDetailsTextView, roleTextView;
     Button logoutButton, addExpenseButton, viewHistoryButton, viewSummaryButton, launchCalculatorButton, adminButton, viewerButton, adminDashboardButton, budgetButton;
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         viewerButton = findViewById(R.id.viewer_button);
         adminDashboardButton = findViewById(R.id.btn_admin_dashboard);
         budgetButton = findViewById(R.id.btn_budget_settings); // New button for Budget Settings
+
+
+
 
         // Ensure the user is logged in
         if (user == null) {
