@@ -77,16 +77,14 @@ public class Register extends AppCompatActivity {
                     groupData.put("createdBy", userId);
 
                     db.collection("groups").document(groupId).set(groupData);
+                    NotificationService.requestNewToken();
                     Toast.makeText(this, "Admin registered successfully!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Register.this, MainActivity.class));
-
+                    finish();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error saving admin: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
 
-        // Get new FCM token
-        FirebaseMessaging.getInstance().getToken();
-        finish();
     }
 }
