@@ -97,6 +97,14 @@
             android:name=".BudgetActivity"
             android:theme="@style/Theme.Material3.Light.NoActionBar"
             android:exported="true" />
+
+        <service
+            android:name=".NotificationService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 </manifest>
 
