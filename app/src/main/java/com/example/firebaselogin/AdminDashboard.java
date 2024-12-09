@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -22,8 +24,8 @@ public class AdminDashboard extends AppCompatActivity {
     RecyclerView recyclerView;
     UserAdapter userAdapter;
     List<User> userList;
-    Button backToMainButton; // Button to navigate back to MainActivity
-    Button createUserButton; // Button to navigate to CreateUserActivity
+    Button backToMainButton;
+    Button createUserButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,46 +45,54 @@ public class AdminDashboard extends AppCompatActivity {
         backToMainButton = findViewById(R.id.btn_back_to_main);
         createUserButton = findViewById(R.id.btn_create_user);
 
-        // Fetch the list of users
-        fetchUsers();
+        // Fetch the admin group and then fetch users
+        fetchAdminGroup();
 
-        // Handle navigation back to MainActivity
-        backToMainButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminDashboard.this, MainActivity.class);
-                startActivity(intent);
-            }
+        // Handle navigation
+        backToMainButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminDashboard.this, MainActivity.class);
+            startActivity(intent);
         });
 
-        // Handle navigation to CreateUserActivity
-        createUserButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminDashboard.this, CreateUserActivity.class);
-                startActivity(intent);
-            }
+        createUserButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminDashboard.this, CreateUserActivity.class);
+            startActivity(intent);
         });
     }
 
-    private void fetchUsers() {
-        db.collection("users").get()
+    private void fetchAdminGroup() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            db.collection("users").document(currentUser.getUid()).get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            String adminGroup = task.getResult().getString("adminGroup");
+                            if (adminGroup != null) {
+                                fetchUsers(adminGroup);
+                            } else {
+                                Toast.makeText(this, "Admin group not found.", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(this, "Error fetching admin group.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    private void fetchUsers(String adminGroup) {
+        db.collection("users")
+                .whereEqualTo("adminGroup", adminGroup)
+                .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         userList.clear();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            // Create a new User object
                             User user = new User();
-
-                            // Set the fields manually
                             user.setId(document.getId());
                             user.setEmail(document.getString("email"));
                             user.setRole(document.getString("role"));
-
-                            // Add the user to the list
                             userList.add(user);
                         }
-                        // Notify the adapter of the changes
                         userAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(this, "Error fetching users: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
