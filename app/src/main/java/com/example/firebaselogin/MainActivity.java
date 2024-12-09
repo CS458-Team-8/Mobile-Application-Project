@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     NotificationService notificationService;
 
     TextView userDetailsTextView, roleTextView;
-    Button logoutButton, addExpenseButton, viewHistoryButton, viewSummaryButton, launchCalculatorButton, adminButton, viewerButton, adminDashboardButton, budgetButton;
+    Button logoutButton, addExpenseButton, viewHistoryButton, viewSummaryButton, launchCalculatorButton, adminDashboardButton, budgetButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
         viewHistoryButton = findViewById(R.id.btn_view_history);
         viewSummaryButton = findViewById(R.id.btn_view_summary);
         launchCalculatorButton = findViewById(R.id.btn_launch_calculator);
-        adminButton = findViewById(R.id.admin_button);
-        viewerButton = findViewById(R.id.viewer_button);
         adminDashboardButton = findViewById(R.id.btn_admin_dashboard);
         budgetButton = findViewById(R.id.btn_budget_settings); // New button for Budget Settings
 
@@ -142,21 +140,18 @@ public class MainActivity extends AppCompatActivity {
      */
     private void adjustUIBasedOnRole(String role) {
         if ("admin".equals(role)) {
-            adminButton.setVisibility(View.VISIBLE);
-            viewerButton.setVisibility(View.GONE);
+
             adminDashboardButton.setVisibility(View.VISIBLE); // Show the Admin Dashboard button for admins
             budgetButton.setVisibility(View.VISIBLE); // Allow budget setting for admins
             Toast.makeText(this, "Welcome, Admin!", Toast.LENGTH_SHORT).show();
         } else if ("viewer".equals(role)) {
-            adminButton.setVisibility(View.GONE);
-            viewerButton.setVisibility(View.VISIBLE);
+
             adminDashboardButton.setVisibility(View.GONE); // Hide the Admin Dashboard button for viewers
             budgetButton.setVisibility(View.GONE); // Hide budget setting for viewers
             Toast.makeText(this, "Welcome, Viewer!", Toast.LENGTH_SHORT).show();
         } else {
             // Default case for unknown roles
-            adminButton.setVisibility(View.GONE);
-            viewerButton.setVisibility(View.GONE);
+
             adminDashboardButton.setVisibility(View.GONE);
             budgetButton.setVisibility(View.GONE);
             Toast.makeText(this, "Welcome, User!", Toast.LENGTH_SHORT).show();
