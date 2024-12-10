@@ -2,6 +2,7 @@ package com.example.firebaselogin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class Register extends AppCompatActivity {
 
     TextInputEditText editTextEmail, editTextPassword;
+    TextView loginNow;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
@@ -30,6 +32,7 @@ public class Register extends AppCompatActivity {
 
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
+        loginNow = findViewById(R.id.loginNow);
 
         findViewById(R.id.btn_register).setOnClickListener(view -> {
             String email = editTextEmail.getText().toString().trim();
@@ -52,6 +55,13 @@ public class Register extends AppCompatActivity {
                             Toast.makeText(this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
+        });
+
+        // Navigate to Login screen
+        loginNow.setOnClickListener(view -> {
+            Intent intent = new Intent(Register.this, Login.class);
+            startActivity(intent);
+            finish(); // Optional: close the Register activity
         });
     }
 
