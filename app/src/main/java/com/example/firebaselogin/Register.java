@@ -2,7 +2,7 @@ package com.example.firebaselogin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,8 +11,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +18,7 @@ import java.util.Map;
 public class Register extends AppCompatActivity {
 
     TextInputEditText editTextEmail, editTextPassword;
+    TextView loginNow;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
@@ -33,6 +32,7 @@ public class Register extends AppCompatActivity {
 
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
+        loginNow = findViewById(R.id.loginNow);
 
         findViewById(R.id.btn_register).setOnClickListener(view -> {
             String email = editTextEmail.getText().toString().trim();
@@ -56,6 +56,13 @@ public class Register extends AppCompatActivity {
                         }
                     });
         });
+
+        // Navigate to Login screen
+        loginNow.setOnClickListener(view -> {
+            Intent intent = new Intent(Register.this, Login.class);
+            startActivity(intent);
+            finish(); // Optional: close the Register activity
+        });
     }
 
     private void saveAdminToFirestore(String userId, String email) {
@@ -67,7 +74,6 @@ public class Register extends AppCompatActivity {
         adminData.put("email", email);
         adminData.put("role", "admin");
         adminData.put("adminGroup", groupId);
-        adminData.put("fcmToken", "");
 
         db.collection("users").document(userId).set(adminData)
                 .addOnSuccessListener(aVoid -> {
@@ -77,7 +83,6 @@ public class Register extends AppCompatActivity {
                     groupData.put("createdBy", userId);
 
                     db.collection("groups").document(groupId).set(groupData);
-                    NotificationService.requestNewToken();
                     Toast.makeText(this, "Admin registered successfully!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Register.this, MainActivity.class));
                     finish();
@@ -85,6 +90,5 @@ public class Register extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error saving admin: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
-
     }
 }
