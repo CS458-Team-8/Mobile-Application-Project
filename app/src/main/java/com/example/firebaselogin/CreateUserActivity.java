@@ -87,6 +87,7 @@ public class CreateUserActivity extends AppCompatActivity {
                                         userMap.put("email", email);
                                         userMap.put("role", role);
                                         userMap.put("adminGroup", adminGroup);
+                                        userMap.put("fcmToken", "");
 
                                         db.collection("users").document(userId).set(userMap)
                                                 .addOnSuccessListener(aVoid -> {
