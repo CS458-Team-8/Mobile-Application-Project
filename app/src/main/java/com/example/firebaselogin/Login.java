@@ -86,7 +86,6 @@ public class Login extends AppCompatActivity {
             }
 
 
-
             // Authenticate user with Firebase Auth
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
@@ -94,6 +93,9 @@ public class Login extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
+
+                                // Get new FCM token
+                                NotificationService.requestNewToken();
                                 fetchUserRoleAndProceed(user.getUid());
                             }
                         } else {

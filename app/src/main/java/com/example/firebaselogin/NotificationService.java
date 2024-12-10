@@ -35,10 +35,9 @@ public class NotificationService extends FirebaseMessagingService {
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
 
-        System.out.println("NEW FCM TOKEN");
-
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            System.out.println("FCM USER ID: " + userId);
             Map<String, Object> userToken = new HashMap<>();
             userToken.put("fcmToken", token);
 
