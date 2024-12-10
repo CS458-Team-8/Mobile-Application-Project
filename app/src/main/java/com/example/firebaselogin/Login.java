@@ -85,6 +85,7 @@ public class Login extends AppCompatActivity {
                 return;
             }
 
+
             // Authenticate user with Firebase Auth
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
@@ -92,6 +93,9 @@ public class Login extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
+
+                                // Get new FCM token
+                                NotificationService.requestNewToken();
                                 fetchUserRoleAndProceed(user.getUid());
                             }
                         } else {
@@ -125,7 +129,6 @@ public class Login extends AppCompatActivity {
                             // Save role and email in UserManager
                             UserManager.getInstance().setRole(role);
                             UserManager.getInstance().setEmail(email);
-
                             // Navigate to MainActivity
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);

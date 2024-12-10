@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "980068351945",
     "project_id": "mobileappclass2024",
-    "storage_bucket": "mobileappclass2024.appspot.com"
+    "storage_bucket": "mobileappclass2024.firebasestorage.app"
   },
   "client": [
     {

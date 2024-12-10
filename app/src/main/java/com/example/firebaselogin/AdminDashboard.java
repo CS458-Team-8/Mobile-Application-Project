@@ -87,12 +87,18 @@ public class AdminDashboard extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         userList.clear();
                         for (QueryDocumentSnapshot document : task.getResult()) {
+                            // Create a new User object
                             User user = new User();
+
+                            // Set the fields manually
                             user.setId(document.getId());
                             user.setEmail(document.getString("email"));
                             user.setRole(document.getString("role"));
+
+                            // Add the user to the list
                             userList.add(user);
                         }
+                        // Notify the adapter of the changes
                         userAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(this, "Error fetching users: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();

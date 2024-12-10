@@ -48,14 +48,22 @@ android {
 }
 
 dependencies {
-    // Use Firebase BOM to ensure consistent versions for Firebase libraries
-    implementation platform('com.google.firebase:firebase-bom:33.6.0') // Use the latest version of BOM
-    implementation libs.firebase.firestore
-    implementation libs.google.firebase.auth
-    implementation libs.firebase.ui.firestore
-    implementation 'com.google.android.gms:play-services-base:18.5.0'
+    // Firebase BOM for consistent versions
+    implementation platform('com.google.firebase:firebase-bom:32.2.2')
 
+    // Firebase libraries
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation libs.firebase.firestore
+    implementation libs.firebase.ui.firestore
+    implementation libs.google.firebase.auth
+
+    // Google Play Services
+    implementation libs.play.services.base
+
+    // MPAndroidChart
     implementation libs.mpandroidchart
+
+    // AndroidX and Material libraries
     implementation libs.appcompat
     implementation libs.material
     implementation libs.lifecycle.runtime.ktx
@@ -67,12 +75,20 @@ dependencies {
     implementation libs.material3
     implementation libs.activity
     implementation libs.constraintlayout
+
+    // Local JAR file
     implementation(files("libs/exp4j-0.4.8.jar"))
+
+    // Testing libraries
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     androidTestImplementation platform(libs.compose.bom)
     androidTestImplementation libs.ui.test.junit4
+
+    // Debugging tools
     debugImplementation libs.ui.tooling
     debugImplementation libs.ui.test.manifest
 }
+apply plugin: 'com.google.gms.google-services'
+
