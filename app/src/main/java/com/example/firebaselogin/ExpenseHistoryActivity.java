@@ -170,15 +170,55 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
     }
 
     private void updateExpense(String expenseId, String amount, String description, String date, String category) {
-        // Update logic as it is in the original file
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        db.collection("expenses").document(expenseId).update(
+                        "amount", amount,
+                        "description", description,
+                        "date", date,
+                        "category", category
+                ).addOnSuccessListener(aVoid -> Toast.makeText(this, "Expense updated", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(this, "Update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void checkBudgetLimit(String category, double amount) {
-        // Budget checking logic as it is in the original file
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        db.collection("budgets")
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("category", category)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        double budget = querySnapshot.getDocuments().get(0).getDouble("amount");
+                        if (amount >= budget * 0.9) {
+                            Toast.makeText(this, "Warning: Near budget limit!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void getCurrentUserGroup(GroupIdCallback callback) {
-        // Current user group fetching logic as it is in the original file
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.collection("users").document(userId).get()
+                .addOnSuccessListener(userDoc -> {
+                    if (userDoc.exists() && userDoc.contains("adminGroup")) {
+                        String adminGroupId = userDoc.getString("adminGroup");
+                        if (adminGroupId != null) {
+                            callback.onGroupIdFetched(adminGroupId);
+                        } else {
+                            Toast.makeText(this, "Admin Group ID is null in Firestore", Toast.LENGTH_SHORT).show();
+                            callback.onGroupIdFetched(null);
+                        }
+                    } else {
+                        Toast.makeText(this, "Admin Group field missing for user in Firestore", Toast.LENGTH_SHORT).show();
+                        callback.onGroupIdFetched(null);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to fetch Admin Group ID: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    callback.onGroupIdFetched(null);
+                });
     }
 
     @Override
@@ -193,3 +233,4 @@ public class ExpenseHistoryActivity extends AppCompatActivity {
         void onGroupIdFetched(String groupId);
     }
 }
+
