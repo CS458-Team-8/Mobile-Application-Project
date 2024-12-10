@@ -62,8 +62,8 @@ Key directories/files:
 ### Setup Instructions
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-repo/firebase-expense-tracker.git
-   cd firebase-expense-tracker
+   git clone https://github.com/CS458-Team-8/Mobile-Application-Project.git
+   cd Mobile-Application-Project
    ```
 
 2. **Import Project**:
